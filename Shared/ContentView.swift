@@ -4,95 +4,114 @@
 //
 //  Created by Katia Flores on 1/28/22.
 //
-
 import SwiftUI
 
-struct Sphere {
-    var radius: Double
-    var volume: Double { return Double.pi * self.radius * Double(3) * Double(4) }
-    var surfaceArea: Double { return Double.pi * Double(4) * self.radius * self.radius }
-
-  init(radius: Double) {
-    self.radius = radius
-  }
-}
-
-extension Sphere {
-    var sV: Double { return self.volume }
-    var sSA: Double { return self.surfaceArea }
-    var R: Double { return self.radius }
-}
-
-let sphere = Sphere(radius: 2)
-let spVolume = sphere.sV
-let spSurfaceArea = sphere.sSA
-
-struct BoundingBox {
-    var radius: Double
-    var diameter: Double { return Double(2) * self.radius }
-    var volume: Double { return self.diameter * self.diameter * self.diameter }
-    var surfaceArea: Double { return Double(6) * self.diameter * self.diameter }
-    
-    init(radius: Double) {
-      self.radius = radius
-    }
-}
-
-extension BoundingBox {
-    var bV: Double { return self.volume }
-    var bSA: Double { return self.surfaceArea }
-}
-
-let boundingBox = BoundingBox(radius: sphere.R)
-let bbVolume = boundingBox.bV
-let bbSurfaceArea = boundingBox.bSA
-
 struct ContentView: View {
+    
+    @ObservedObject private var sphereModel = Sphere()
+    @State var radiusString = "1.0"
+    
     var body: some View {
-        HStack {
-            VStack {
-                Text("Sphere")
-                    .padding(.bottom, 0)
-                Text("Volume")
-                    .padding(.bottom, 0)
-                Text(" \(spVolume, specifier: "%.2f") ")
-                    .padding(.horizontal)
-                    .frame(width: 100)
-                    .padding(.top, 0)
-                    .padding(.bottom,30)
-                Text("Surface Area")
-                    .padding(.bottom, 0)
-                Text(" \(spSurfaceArea, specifier: "%.2f") ")
-                    .padding(.horizontal)
-                    .frame(width: 100)
-                    .padding(.top, 0)
-                    .padding(.bottom,30)
-            }
-            VStack {
-                Text("Bounding Box")
-                    .padding(.bottom, 0)
-                Text("Volume")
-                    .padding(.bottom, 0)
-                Text(" \(bbVolume, specifier: "%.2f") ")
-                    .padding(.horizontal)
-                    .frame(width: 100)
-                    .padding(.top, 0)
-                    .padding(.bottom,30)
-                Text("Surface Area")
-                    .padding(.bottom, 0)
-                Text(" \(bbSurfaceArea, specifier: "%.2f") ")
-                    .padding(.horizontal)
-                    .frame(width: 100)
-                    .padding(.top, 0)
-                    .padding(.bottom,30)
-            }
+        
+        VStack{
+            Text("Radius")
+                .padding(.top)
+                .padding(.bottom, 0)
+            TextField("Enter Radius", text: $radiusString, onCommit: {Task.init {await self.calculateSphere()}})
+                .padding(.horizontal)
+                .frame(width: 100)
+                .padding(.top, 0)
+                .padding(.bottom, 30)
+            HStack {
+                VStack{
+            Text("Sphere's Volume")
+                .padding(.bottom, 0)
+            TextField("", text: $sphereModel.sphVolumeText)
+                .padding(.horizontal)
+                .frame(width: 100)
+                .padding(.top, 0)
+                .padding(.bottom,30)
+            Text("Bounding Box's Volume")
+                .padding(.bottom, 0)
+            TextField("", text: $sphereModel.bbVolumeText)
+                .padding(.horizontal)
+                .frame(width: 100)
+                .padding(.top, 0)
+                .padding(.bottom,30)
+            Text("Sphere's Surface Area")
+                .padding(.bottom, 0)
+            TextField("", text: $sphereModel.sphSurfaceAreaText)
+                .padding(.horizontal)
+                .frame(width: 100)
+                .padding(.top, 0)
+                .padding(.bottom,30)
+            Text("Bounding Box's Surface Area")
+                .padding(.bottom, 0)
+            TextField("", text: $sphereModel.bbSurfaceAreaText)
+                .padding(.horizontal)
+                .frame(width: 100)
+                .padding(.top, 0)
+                .padding(.bottom,30)
         }
+        VStack{
+            Text("Sphere's Volume")
+                .padding(.bottom, 0)
+            Text("\(sphereModel.sphVolume, specifier: "%.2f")")
+                .padding(.horizontal)
+                .frame(width: 100)
+                .padding(.top, 0)
+                .padding(.bottom,30)
+            Text("Bounding Box's Volume")
+                .padding(.bottom, 0)
+            Text("\(sphereModel.bbVolume, specifier: "%.2f")")
+                .padding(.horizontal)
+                .frame(width: 100)
+                .padding(.top, 0)
+                .padding(.bottom,30)
+            Text("Sphere's Surface Area")
+                .padding(.bottom, 0)
+            Text("\(sphereModel.sphSurfaceArea, specifier: "%.2f")")
+                .padding(.horizontal)
+                .frame(width: 100)
+                .padding(.top, 0)
+                .padding(.bottom,30)
+            Text("Bounding Box's Surface Area")
+                .padding(.bottom, 0)
+            Text("\(sphereModel.bbSurfaceArea, specifier: "%.2f")")
+                .padding(.horizontal)
+                .frame(width: 100)
+                .padding(.top, 0)
+                .padding(.bottom,30)
+            }
+                
+                
+            }
+            
+            Button("Calculate", action: {Task.init { await self.calculateSphere()}})
+                .padding(.bottom)
+                .padding()
+                .disabled(sphereModel.enableButton == false)
+            
+            
+        }
+        
     }
+    
+    func calculateSphere() async {
+        
+        sphereModel.setButtonEnable(state: false)
+        let _ : Bool = await sphereModel.initWithRadius(passedRadius: Double(radiusString)!)
+        
+        
+    
+
+}
+    
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            
     }
-    
 }

@@ -12,7 +12,7 @@ struct Homework_1App: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .frame(minWidth: 300, minHeight: 400)
+                .frame(minWidth: 400, minHeight: 600)
         }
     }
 }
