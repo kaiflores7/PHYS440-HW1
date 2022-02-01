@@ -9,7 +9,7 @@ import SwiftUI
 
 struct Sphere {
     var radius: Double
-    var volume: Double { return Double.pi * self.radius * Double(3) * Double(4) }
+    var volume: Double { return Double.pi * self.radius * 4.0 / 3.0 }
     var surfaceArea: Double { return Double.pi * Double(4) * self.radius * self.radius }
 
   init(radius: Double) {
@@ -23,7 +23,7 @@ extension Sphere {
     var R: Double { return self.radius }
 }
 
-let sphere = Sphere(radius: 2)
+let sphere = Sphere(radius: 1)
 let spVolume = sphere.sV
 let spSurfaceArea = sphere.sSA
 
