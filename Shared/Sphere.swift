@@ -45,7 +45,7 @@ class Sphere: NSObject, ObservableObject {
     /// calculateSphVolume
     func calculateSphVolume(radius: Double) async -> Double {
         
-        let sphVolume = 4.0 * Double.pi * pow(radius,3) / 4.0
+        let sphVolume = 4.0 * Double.pi * pow(radius,3) / 3.0
         let newSphVolumeText = String(format: "%7.5f", sphVolume)
         
         await updateSphVolume(sphVolumeTextString: newSphVolumeText)
@@ -87,7 +87,7 @@ class Sphere: NSObject, ObservableObject {
     func calculateBBSurfaceArea(radius: Double) async -> Double {
         
         let diameter = 2.0 * radius
-        let bbSurfaceArea = 6.0 * diameter
+        let bbSurfaceArea = 6.0 * pow(diameter,2)
         let newBBSurfaceAreaText = String(format: "%7.5f", bbSurfaceArea)
         
         await updateBBSurfaceArea(bbSurfaceAreaTextString: newBBSurfaceAreaText)
