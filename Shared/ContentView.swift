@@ -9,6 +9,7 @@ import SwiftUI
 struct ContentView: View {
     
     @ObservedObject private var sphereModel = Sphere()
+    @ObservedObject private var bbModel = BoundingBox()
     @State var radiusString = "1.0"
     
     var body: some View {
@@ -17,7 +18,7 @@ struct ContentView: View {
             Text("Radius")
                 .padding(.top)
                 .padding(.bottom, 0)
-            TextField("Enter Radius", text: $radiusString, onCommit: {Task.init {await self.calculateSphere()}})
+            TextField("Enter Radius", text: $radiusString, onCommit: {Task.init {await self.calculateSphere(); await self.calculateBoundingBox()}})
                 .padding(.horizontal)
                 .frame(width: 100)
                 .padding(.top, 0)
@@ -33,7 +34,7 @@ struct ContentView: View {
                 .padding(.bottom,30)
             Text("Bounding Box's Volume")
                 .padding(.bottom, 0)
-            TextField("", text: $sphereModel.bbVolumeText)
+            TextField("", text: $bbModel.bbVolumeText)
                 .padding(.horizontal)
                 .frame(width: 100)
                 .padding(.top, 0)
@@ -47,7 +48,7 @@ struct ContentView: View {
                 .padding(.bottom,30)
             Text("Bounding Box's Surface Area")
                 .padding(.bottom, 0)
-            TextField("", text: $sphereModel.bbSurfaceAreaText)
+            TextField("", text: $bbModel.bbSurfaceAreaText)
                 .padding(.horizontal)
                 .frame(width: 100)
                 .padding(.top, 0)
@@ -63,7 +64,7 @@ struct ContentView: View {
                 .padding(.bottom,30)
             Text("Bounding Box's Volume")
                 .padding(.bottom, 0)
-            Text("\(sphereModel.bbVolume, specifier: "%.2f")")
+            Text("\(bbModel.bbVolume, specifier: "%.2f")")
                 .padding(.horizontal)
                 .frame(width: 100)
                 .padding(.top, 0)
@@ -77,7 +78,7 @@ struct ContentView: View {
                 .padding(.bottom,30)
             Text("Bounding Box's Surface Area")
                 .padding(.bottom, 0)
-            Text("\(sphereModel.bbSurfaceArea, specifier: "%.2f")")
+            Text("\(bbModel.bbSurfaceArea, specifier: "%.2f")")
                 .padding(.horizontal)
                 .frame(width: 100)
                 .padding(.top, 0)
@@ -87,10 +88,11 @@ struct ContentView: View {
                 
             }
             
-            Button("Calculate", action: {Task.init { await self.calculateSphere()}})
+            Button("Calculate", action: {Task.init { await self.calculateSphere(); await self.calculateBoundingBox()}})
                 .padding(.bottom)
                 .padding()
                 .disabled(sphereModel.enableButton == false)
+                .disabled(bbModel.enableButton == false)
             
             
         }
@@ -102,10 +104,14 @@ struct ContentView: View {
         sphereModel.setButtonEnable(state: false)
         let _ : Bool = await sphereModel.initWithRadius(passedRadius: Double(radiusString)!)
         
-        
+    }
     
-
-}
+    func calculateBoundingBox() async {
+        
+        bbModel.setButtonEnable(state: false)
+        let _ : Bool = await bbModel.initWithRadius(passedRadius: Double(radiusString)!)
+        
+    }
     
 }
 
